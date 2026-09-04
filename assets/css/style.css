@@ -1,0 +1,405 @@
+/* ---------------------------------------------------------
+   Design Dimensions — Under Construction
+   Values ported 1:1 from Figma (node 12254:12378)
+--------------------------------------------------------- */
+
+:root {
+  --bg: #f4f4f5;
+  --ink: #000000;
+  --ink-muted: #252525;
+  --pill-bg: #ebebed;
+  --white: #ffffff;
+
+  --band-slate: #859396;
+  --band-yellow: #fff27a;
+  --band-sage: #b0c3b4;
+
+  --font: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --content-max: 1440px;
+  --pad-x: 120px;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+ul { list-style: none; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+/* locked on <html> while the preloader owns the screen, so the target
+   card positions main.js measures for the photo-landing flight can't
+   drift out from under it if the visitor scrolls mid-sequence */
+html.preloading,
+html.preloading body {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* ---------- preloader ----------
+   Real card photos stack in, resolve into a row, float for a beat,
+   then fly — the SAME elements, not a stand-in — to their exact
+   real position and size inside the actual cards. The backdrop is
+   a separate layer so it can fade without fading the photos riding
+   above it; by the time it clears, the photos have already landed
+   and the rest of the page is revealing around them.
+--------------------------------- */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.preloader__backdrop {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+}
+
+.preloader__stack {
+  position: fixed;
+  inset: 0;
+}
+
+.preloader__photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--photo-w, 168px);
+  height: var(--photo-h, 218px);
+  border-radius: 0; /* sharp while stacking — main.js grows this only during the landing flight */
+  overflow: hidden;
+}
+
+.preloader__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- page shell ---------- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+  padding-bottom: 140px;
+}
+
+.page__inner {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 60px var(--pad-x) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+/* ---------- header ---------- */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  position: relative;
+  width: 167px;
+  height: 82px;
+  display: block;
+}
+
+/* sized as % of .logo (Figma's own inset ratios) so one width/height
+   change on .logo — e.g. the mobile breakpoint — rescales both children */
+.logo__mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15.68%;
+  height: 34.95%;
+}
+
+.logo__wordmark {
+  position: absolute;
+  left: 16.21%;
+  top: 50.08%;
+  width: 83.79%;
+  height: 49.92%;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  width: 460px;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.hero__tags {
+  position: relative;
+  width: 460px;
+  max-width: 100%;
+  overflow: hidden;
+  pointer-events: none; /* the strip auto-scrolls continuously and never pauses on hover */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+}
+
+.hero__tags__track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  will-change: transform;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  background: var(--pill-bg);
+  border-radius: 4px;
+  padding: 4px 16px;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0.8px;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.tag__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+  flex-shrink: 0;
+}
+
+.hero__title {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 64px;
+  line-height: 82px;
+  letter-spacing: -2.56px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hero__title .line {
+  display: block;
+}
+
+.hero__subtitle {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 300;
+  color: var(--ink);
+  white-space: nowrap; /* each sentence stays on its own line; only the explicit <br> breaks */
+}
+
+/* the subtitle wraps at a different word on mobile (Figma authors it
+   distinctly per breakpoint) — swap which hard break is active */
+.break--mobile { display: none; }
+
+.hero__email {
+  font-weight: 500;
+  transition: opacity 0.25s ease;
+}
+
+.hero__email:hover,
+.hero__email:focus-visible {
+  opacity: 0.6;
+}
+
+/* ---------- work / cards ---------- */
+
+.work {
+  width: 100%;
+}
+
+.work__viewport {
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none; /* the row auto-scrolls continuously and never pauses on hover */
+}
+
+.work__track {
+  display: flex;
+  align-items: stretch;
+  gap: 32px;
+  width: max-content;
+  will-change: transform;
+}
+
+.card {
+  width: 352px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.card__media {
+  width: 100%;
+  height: 360px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card__band {
+  flex: 1 1 auto;
+  background: var(--card-band, var(--band-slate));
+  padding: 24px 24px 40px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.card__text {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card__cat {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.144px;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.card__title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.24px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.card__desc {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.168px;
+  font-weight: 400;
+  color: var(--ink-muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ---------- responsive ----------
+   Values ported 1:1 from the Figma mobile frame (node 12256:12932)
+--------------------------------- */
+
+@media (max-width: 720px) {
+  :root { --pad-x: 24px; }
+
+  .page { gap: 0; padding-bottom: 96px; }
+  .page__inner { padding: 0; gap: 0; }
+
+  /* becomes its own sticky, blurred bar rather than sharing page__inner's padding */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 24px 28px;
+    -webkit-backdrop-filter: blur(25px);
+    backdrop-filter: blur(25px);
+  }
+
+  .logo { width: 84px; height: 41px; }
+
+  .hero {
+    width: 100%;
+    padding: 64px 24px 48px;
+    gap: 24px;
+  }
+
+  .hero__title {
+    font-size: 28px;
+    line-height: 42px;
+    letter-spacing: -1.12px;
+  }
+
+  .hero__subtitle { font-size: 16px; line-height: 24px; white-space: normal; }
+
+  .break--desktop { display: none; }
+  .break--mobile { display: inline; }
+
+  .tag {
+    font-size: 14px;
+    line-height: 28px;
+    letter-spacing: 0.56px;
+    padding: 2px 8px;
+  }
+
+  .work__track { gap: 25px; }
+
+  .card { width: 260px; border-radius: 20px; }
+  .card__media { height: 260px; }
+
+  .card__band { padding: 20px 20px 24px; }
+  .card__text { gap: 8px; }
+
+  .card__title {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.192px;
+  }
+
+  .card__desc {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -0.144px;
+  }
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
